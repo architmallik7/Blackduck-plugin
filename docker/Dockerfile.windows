@@ -1,13 +1,19 @@
 FROM plugins/base:windows-ltsc2022-amd64
 
+# Set the user
 USER ContainerAdministrator
 
+# Set environment variables
 ENV GODEBUG=netdns=go
 
-ADD scripts/download_detect.ps1 C:/download_detect.ps1
+# Add the PowerShell script using double backslashes (Windows-style paths)
+ADD scripts/download_detect.ps1 C:\\download_detect.ps1
 
-RUN powershell -File C:/download_detect.ps1
+# Set the PowerShell execution policy to Bypass to avoid script execution issues
+RUN powershell -ExecutionPolicy Bypass -File C:\\download_detect.ps1
 
-ADD release/windows/amd64/blackduck-plugin.exe C:/blackduck-plugin.exe
+# Add the blackduck plugin executable with proper path formatting
+ADD release/windows/amd64/blackduck-plugin.exe C:\\blackduck-plugin.exe
 
+# Set the entrypoint for the plugin executable
 ENTRYPOINT ["C:\\blackduck-plugin.exe"]
