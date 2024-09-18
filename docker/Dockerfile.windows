@@ -1,3 +1,22 @@
 FROM plugins/base:windows-ltsc2022-amd64
 
-# No commands, just to check if the image can be pulled and a container can be created
+# Set the user as ContainerAdministrator for better permissions
+USER ContainerAdministrator
+
+# Set GODEBUG environment variable
+ENV GODEBUG=netdns=go
+
+# Create a directory for the script
+RUN powershell -Command "New-Item -ItemType Directory -Force -Path C:\scripts"
+
+# Add the PowerShell script to the container
+COPY scripts/download_detect.ps1 C:\scripts\download_detect.ps1
+
+# Execute the PowerShell script with execution policy bypass
+RUN powershell -ExecutionPolicy Bypass -File C:\scripts\download_detect.ps1
+
+# Add the blackduck-plugin executable to the container
+ADD release/windows/amd64/blackduck-plugin.exe C:/blackduck-plugin.exe
+
+# Set the entry point to the blackduck-plugin executable
+ENTRYPOINT ["C:\\blackduck-plugin.exe"]
