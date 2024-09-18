@@ -1,4 +1,4 @@
-FROM plugins/base:windows-ltsc2022-amd64
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
 
 USER ContainerAdministrator
 
@@ -6,11 +6,11 @@ ENV GODEBUG=netdns=go
 
 COPY scripts/download_detect.ps1 C:\\download_detect.ps1
 
-# Debug step to check the contents of C:\
-RUN powershell -Command "Write-Output 'Checking directory structure'; Get-ChildItem -Path C:\"
+# Verify PowerShell availability and directory structure
+RUN C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command "Write-Output 'Checking directory structure'; Get-ChildItem -Path C:\\"
 
 # Run the PowerShell script
-RUN powershell -ExecutionPolicy Bypass -File C:\\download_detect.ps1
+RUN C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -ExecutionPolicy Bypass -File C:\\download_detect.ps1
 
 COPY release/windows/amd64/blackduck-plugin.exe C:\\blackduck-plugin.exe
 
