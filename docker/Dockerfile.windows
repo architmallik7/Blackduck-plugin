@@ -6,6 +6,8 @@ ENV GODEBUG=netdns=go
 
 COPY scripts/download_detect.ps1 C:\\download_detect.ps1
 
+# This should not have an empty line after it
+RUN dir C:\\
 RUN powershell -ExecutionPolicy Bypass -File C:\\download_detect.ps1
 
 COPY release/windows/amd64/blackduck-plugin.exe C:\\blackduck-plugin.exe
