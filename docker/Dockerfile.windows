@@ -6,6 +6,10 @@ ENV GODEBUG=netdns=go
 
 COPY scripts/download_detect.ps1 C:\\download_detect.ps1
 
+# Install Git for Windows (which includes bash)
+RUN Invoke-WebRequest -Uri "https://github.com/git-for-windows/git/releases/download/v2.41.0.windows.1/Git-2.41.0-64-bit.exe" -OutFile "C:\\Git-2.41.0-64-bit.exe"; \
+    Start-Process -Wait -FilePath "C:\\Git-2.41.0-64-bit.exe" -ArgumentList "/VERYSILENT /NORESTART"
+
 # Verify PowerShell availability and directory structure
 RUN C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command "Write-Output 'Checking directory structure'; Get-ChildItem -Path C:\\"
 
