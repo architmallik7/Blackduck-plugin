@@ -6,8 +6,10 @@ ENV GODEBUG=netdns=go
 
 COPY scripts/download_detect.ps1 C:\\download_detect.ps1
 
-# This should not have an empty line after it
-RUN dir C:\\
+# Debug step to check the contents of C:\
+RUN powershell -Command "Write-Output 'Checking directory structure'; Get-ChildItem -Path C:\"
+
+# Run the PowerShell script
 RUN powershell -ExecutionPolicy Bypass -File C:\\download_detect.ps1
 
 COPY release/windows/amd64/blackduck-plugin.exe C:\\blackduck-plugin.exe
