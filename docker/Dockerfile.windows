@@ -6,10 +6,10 @@ USER ContainerAdministrator
 # Set GODEBUG environment variable
 ENV GODEBUG=netdns=go
 
-# Create a directory for the script
-RUN mkdir C:\scripts
+# Create a directory for the script and copy the PowerShell script to the container
+RUN powershell -Command New-Item -ItemType Directory -Force -Path C:\scripts; \
+    if ($?) { Write-Host "Directory created successfully" } else { Write-Error "Failed to create directory"; exit 1 }
 
-# Add the PowerShell script to the container
 COPY scripts/download_detect.ps1 C:\scripts\download_detect.ps1
 
 # Execute the PowerShell script with execution policy bypass
@@ -20,3 +20,6 @@ COPY release/windows/amd64/blackduck-plugin.exe C:\blackduck-plugin.exe
 
 # Set the entry point to the blackduck-plugin executable
 ENTRYPOINT ["C:\\blackduck-plugin.exe"]
+
+# Add some debugging steps
+RUN powershell -Command "Get-ChildItem C:\; Get-ChildItem C:\scripts"
